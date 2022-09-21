@@ -16,7 +16,7 @@ class CustomWebdriver(BaseCustomWebdriver):
         self._headless = headless
         self._driver = None
 
-    def init_driver(self):
+    def init_driver(self) -> None:
         opts = uc.ChromeOptions()
         v = ChromeDriverManager().driver.get_browser_version()
         opts.headless = self._headless

@@ -13,5 +13,5 @@ class BaseRunner(Runable):
     cache_session = False
     driver: UCDriver = None
 
-    def set_driver(self, driver: UCDriver):
+    def set_driver(self, driver: UCDriver) -> None:
         self.driver = driver

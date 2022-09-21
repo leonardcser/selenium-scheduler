@@ -8,5 +8,5 @@ from selenium_scheduler.interfaces import Runable
 class RunnerAdapterManager(Runable):
     adapter: BaseRunnerAdapter
 
-    def run(self):
+    def run(self) -> None:
         self.adapter.run()

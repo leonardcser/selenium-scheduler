@@ -9,7 +9,7 @@ from selenium_scheduler.classes.webdriver import CustomWebdriver
 from selenium_scheduler.utils.logging import logger
 
 
-def run_now(runner: BaseRunner):
+def run_now(runner: BaseRunner) -> None:
     driver = CustomWebdriver(
         headless=runner.headless, cache_session=runner.cache_session
     )
@@ -22,6 +22,6 @@ def run_now(runner: BaseRunner):
     RunnerAdapterManager(adapter=adapter).run()
 
 
-def sched(runner: BaseRunner, job: schedule.Job):
+def sched(runner: BaseRunner, job: schedule.Job) -> None:
     logger.info(f"Started successfully job for {runner.__class__.__name__}")
     job.do(run_now, runner=runner)
