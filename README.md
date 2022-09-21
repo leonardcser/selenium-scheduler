@@ -6,6 +6,7 @@
     - [Install](#install)
       - [Advanced](#advanced)
     - [Status](#status)
+    - [Status](#status-1)
     - [Uninstall](#uninstall)
 
 ## Installation
@@ -35,6 +36,12 @@ selenium_scheduler install -e main.py -r requirements/requirements.txt -m "modul
 
 ```sh
 selenium_scheduler status
+```
+
+### Status
+
+```sh
+selenium_scheduler logs
 ```
 
 ### Uninstall
