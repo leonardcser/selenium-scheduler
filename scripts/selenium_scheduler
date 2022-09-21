@@ -8,13 +8,16 @@ from string import Template
 
 
 DEST_DIR = Path.home() / ".selenium_scheduler"
+
 LAUNCH_AGENT_DIR = Path.home() / "Library/LaunchAgents"
 LAUNCH_AGENT_NAME = f"selenium_scheduler.startup.{Path.cwd().name}"
 LAUNCH_AGENT_FILE_NAME = f"{LAUNCH_AGENT_NAME}.plist"
 LAUNCH_AGENT_PATH = os.path.join(LAUNCH_AGENT_DIR, LAUNCH_AGENT_FILE_NAME)
+
 INSTALL_VENV_FILE_NAME = "ss_install_venv"
 RUN_FILE_NAME = "ss_run"
 LOG_FILE_NAME = "logs.log"
+
 PLIST = Template(
     """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -30,6 +33,7 @@ PLIST = Template(
     <array>
         <string>/bin/sh</string>
         <string>${RUN_PATH}</string>
+        <string>${DEST_DIR}</string>
     </array>
 </dict>
 </plist>
@@ -87,6 +91,7 @@ def install(args: argparse.Namespace) -> None:
             PLIST.substitute(
                 RUN_PATH=DEST_DIR / RUN_FILE_NAME,
                 LAUNCH_AGENT_NAME=LAUNCH_AGENT_NAME,
+                DEST_DIR=DEST_DIR,
             )
         )
 
