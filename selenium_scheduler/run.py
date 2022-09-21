@@ -23,5 +23,5 @@ def run_now(runner: BaseRunner) -> None:
 
 
 def sched(runner: BaseRunner, job: schedule.Job) -> None:
-    logger.info(f"Started successfully job for {runner.__class__.__name__}")
+    logger.info(f"Job started successfully for {runner.__class__.__name__}")
     job.do(run_now, runner=runner)
