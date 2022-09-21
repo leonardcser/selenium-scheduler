@@ -22,4 +22,9 @@ setup(
     author="Leonard C.",
     packages=find_packages(),
     classifiers=[],
+    scripts=[
+        "scripts/selenium_scheduler",
+        "scripts/ss_install_venv",
+        "scripts/ss_run",
+    ],
 )
