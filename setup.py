@@ -20,6 +20,6 @@ setup(
     install_requires=requirements(),
     url="https://github.com/leonardcser/selenium-scheduler",
     author="Leonard C.",
-    packages=[find_packages("selenium_scheduler")],
+    packages=find_packages(),
     classifiers=[],
 )
