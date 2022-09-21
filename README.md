@@ -8,6 +8,7 @@
     - [Status](#status)
     - [Logs](#logs)
     - [Uninstall](#uninstall)
+  - [Example](#example)
 
 ## Installation
 
@@ -49,3 +50,7 @@ selenium_scheduler logs
 ```sh
 selenium_scheduler uninstall
 ```
+
+## Example
+
+See https://github.com/leonardcser/epfl-scheduler
