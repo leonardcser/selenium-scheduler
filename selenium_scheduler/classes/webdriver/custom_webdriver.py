@@ -9,6 +9,7 @@ from selenium_scheduler.types import UCDriver
 
 
 class CustomWebdriver(BaseCustomWebdriver):
+    # 'cache_session' not implemented yet
     def __init__(
         self, headless: bool = False, cache_session: bool = False
     ) -> None:
@@ -25,10 +26,3 @@ class CustomWebdriver(BaseCustomWebdriver):
         if self._driver is None:
             raise WebDriverNotInitialisedException
         return self._driver
-
-    # def __enter__(self):
-    #     return self
-
-    # def __exit__(self, exc_type, exc_val, exc_tb):
-    #     super().__exit__(exc_type, exc_val, exc_tb)
-    #     self._driver.quit()
