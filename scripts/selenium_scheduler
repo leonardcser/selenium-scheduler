@@ -111,9 +111,7 @@ def uninstall(_: argparse.Namespace = None) -> None:
     if os.path.isdir(DOT_DIR) and len(os.listdir(DOT_DIR)) == 0:
         os.rmdir(DOT_DIR)
     if os.path.exists(LAUNCH_AGENT_PATH):
-        run_cmd(
-            f"launchctl unload {LAUNCH_AGENT_DIR / LAUNCH_AGENT_FILE_NAME}"
-        )
+        run_cmd(f"launchctl unload {LAUNCH_AGENT_PATH}")
         os.remove(LAUNCH_AGENT_PATH)
 
 
