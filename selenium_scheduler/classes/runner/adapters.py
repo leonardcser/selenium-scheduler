@@ -23,19 +23,18 @@ class ConnectionRunnerAdapter(BaseRunnerAdapter):
             try:
                 self.runable.run()
                 break
-            except (urllib.error.URLError, WebDriverException) as e:
+            except (urllib.error.URLError, WebDriverException):
                 tries += 1
                 tries_total_str = (
                     f" ({tries}/{self.max_retries})"
                     if self.max_retries != -1
                     else ""
                 )
-                logger.exception(
+                logger.error(
                     (
                         "Connection lost, retrying in "
                         f"{self.sleep_time}s...{tries_total_str}"
-                    ),
-                    exc_info=e,
+                    )
                 )
                 time.sleep(self.sleep_time)
 

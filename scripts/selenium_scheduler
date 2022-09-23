@@ -82,10 +82,11 @@ def install(args: argparse.Namespace) -> None:
         shutil.copytree(m, DEST_DIR / m)
 
     if env_file:
-        shutil.copyfile(env_file, DEST_DIR / ".env")
+        shutil.copyfile(env_file, DEST_DIR / env_file.name)
 
     # Installing run script
     shutil.copyfile(shutil.which(RUN_FILE_NAME), DEST_DIR / RUN_FILE_NAME)
+
     print(f"-> Creating LaunchAgent ({LAUNCH_AGENT_PATH})...")
     with open(LAUNCH_AGENT_PATH, "w") as f:
         f.write(
