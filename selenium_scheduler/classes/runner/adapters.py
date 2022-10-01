@@ -1,8 +1,11 @@
+import socket
 import time
 import urllib
 from dataclasses import dataclass
 from typing import Union
 
+import requests
+import urllib3
 from selenium.common.exceptions import WebDriverException
 
 from selenium_scheduler.classes.runner import BaseRunner, BaseRunnerAdapter
@@ -11,11 +14,32 @@ from selenium_scheduler.utils.logging import logger
 
 
 @dataclass
+class ExceptionInterceptRunnerAdapter(BaseRunnerAdapter):
+    def run(self) -> None:
+        try:
+            self.runable.run()
+        except Exception as e:
+            logger.exception(
+                "ExceptionInterceptRunnerAdapter: Uncaught Exception",
+                exc_info=e,
+            )
+
+
+@dataclass
 class ConnectionRunnerAdapter(BaseRunnerAdapter):
     # If set to -1, it will infinitly try to reconnect
     max_retries: int
     # In seconds
     sleep_time: Union[float, int] = 10
+    connection_exceptions = (
+        urllib.error.URLError,
+        WebDriverException,
+        requests.exceptions.ConnectTimeout,
+        requests.exceptions.ConnectionError,
+        urllib3.exceptions.MaxRetryError,
+        urllib3.exceptions.NewConnectionError,
+        socket.gaierror,
+    )
 
     def run(self) -> None:
         tries = 0
@@ -23,7 +47,7 @@ class ConnectionRunnerAdapter(BaseRunnerAdapter):
             try:
                 self.runable.run()
                 break
-            except (urllib.error.URLError, WebDriverException):
+            except self.connection_exceptions:
                 tries += 1
                 tries_total_str = (
                     f" ({tries}/{self.max_retries})"
@@ -41,12 +65,13 @@ class ConnectionRunnerAdapter(BaseRunnerAdapter):
 
 @dataclass
 class DriverRunnerAdapter(BaseRunnerAdapter):
-    custom_driver: BaseCustomWebdriver
+    custom_driver: Union[BaseCustomWebdriver, None]
     runner: BaseRunner
 
     def run(self) -> None:
-        self.custom_driver.init_driver()
-        self.runner.set_driver(self.custom_driver.get_driver())
+        if self.custom_driver:
+            self.custom_driver.init_driver()
+            self.runner.set_driver(self.custom_driver.get_driver())
         logger.info("DriverRunnerAdapter: Started successfully")
         tries = 0
         while tries < self.runner.max_retries:
@@ -61,14 +86,11 @@ class DriverRunnerAdapter(BaseRunnerAdapter):
                     f"DriverRunnerAdapter: Exception found{retries_str}",
                     exc_info=e,
                 )
-            except Exception as e:
-                logger.exception(
-                    (f"DriverRunnerAdapter: Uncaught Exception{retries_str}"),
-                    exc_info=e,
-                )
             tries += 1
         if tries == self.runner.max_retries:
             logger.error("DriverRunnerAdapter: Exited after max retries")
         else:
             logger.info("DriverRunnerAdapter: Exited successfully")
-        self.custom_driver.get_driver().quit()
+
+        if self.custom_driver:
+            self.custom_driver.get_driver().quit()

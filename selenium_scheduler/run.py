@@ -4,20 +4,26 @@ from selenium_scheduler.classes.runner import BaseRunner, RunnerAdapterManager
 from selenium_scheduler.classes.runner.adapters import (
     ConnectionRunnerAdapter,
     DriverRunnerAdapter,
+    ExceptionInterceptRunnerAdapter,
 )
 from selenium_scheduler.classes.webdriver import CustomWebdriver
 from selenium_scheduler.utils.logging import logger
 
 
 def run_now(runner: BaseRunner) -> None:
-    driver = CustomWebdriver(
-        headless=runner.headless, cache_session=runner.cache_session
-    )
-    adapter = ConnectionRunnerAdapter(
-        runable=DriverRunnerAdapter(
-            runable=None, custom_driver=driver, runner=runner
-        ),
-        max_retries=runner.conn_max_retries,
+    if runner.use_webdriver:
+        driver = CustomWebdriver(
+            headless=runner.headless, cache_session=runner.cache_session
+        )
+    else:
+        driver = None
+    adapter = ExceptionInterceptRunnerAdapter(
+        runable=ConnectionRunnerAdapter(
+            runable=DriverRunnerAdapter(
+                runable=None, custom_driver=driver, runner=runner
+            ),
+            max_retries=runner.conn_max_retries,
+        )
     )
     RunnerAdapterManager(adapter=adapter).run()
 
