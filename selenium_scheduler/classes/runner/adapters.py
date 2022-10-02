@@ -72,7 +72,7 @@ class DriverRunnerAdapter(BaseRunnerAdapter):
         if self.custom_driver:
             self.custom_driver.init_driver()
             self.runner.set_driver(self.custom_driver.get_driver())
-        logger.info("DriverRunnerAdapter: Started successfully")
+        logger.info(f"{self.runner.__class__.__name__}: Started successfully")
         tries = 0
         while tries < self.runner.max_retries:
             retries_str = (
@@ -83,14 +83,21 @@ class DriverRunnerAdapter(BaseRunnerAdapter):
                 break
             except self.runner.exceptions as e:
                 logger.exception(
-                    f"DriverRunnerAdapter: Exception found{retries_str}",
+                    (
+                        f"{self.runner.__class__.__name__}: "
+                        f"Exception found{retries_str}"
+                    ),
                     exc_info=e,
                 )
             tries += 1
         if tries == self.runner.max_retries:
-            logger.error("DriverRunnerAdapter: Exited after max retries")
+            logger.error(
+                f"{self.runner.__class__.__name__}: Exited after max retries"
+            )
         else:
-            logger.info("DriverRunnerAdapter: Exited successfully")
+            logger.info(
+                f"{self.runner.__class__.__name__}: Exited successfully"
+            )
 
         if self.custom_driver:
             self.custom_driver.get_driver().quit()
