@@ -33,11 +33,13 @@ class ConnectionRunnerAdapter(BaseRunnerAdapter):
     sleep_time: Union[float, int] = 10
     connection_exceptions = (
         urllib.error.URLError,
-        WebDriverException,
-        requests.exceptions.ConnectTimeout,
-        requests.exceptions.ConnectionError,
+        WebDriverException,  # TODO: remove this exception from here
         urllib3.exceptions.MaxRetryError,
         urllib3.exceptions.NewConnectionError,
+        urllib3.exceptions.ReadTimeoutError,
+        requests.exceptions.ConnectTimeout,
+        requests.exceptions.ConnectionError,
+        requests.exceptions.ReadTimeout,
         socket.gaierror,
     )
 
